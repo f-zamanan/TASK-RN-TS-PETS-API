@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Link } from "expo-router";
+import { fetchOnePet } from "@/api/api";
+import pets from "@/data/pets";
 
 interface PetItemProps {
   pet: {
@@ -24,6 +26,7 @@ interface PetItemProps {
 
 const PetItem = ({ pet, setDisplayPets, displayPets }: PetItemProps) => {
   const [image, setImage] = useState(pet.image);
+
   return (
     <Link href={`/${pet.id}`} asChild>
       <Pressable style={styles.container}>
@@ -38,7 +41,9 @@ const PetItem = ({ pet, setDisplayPets, displayPets }: PetItemProps) => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.petButton}
-            onPress={() => setImage(pet.image2)}
+            onPress={() => {
+              setImage(pet.image2);
+            }}
           >
             <Text style={styles.buttonText}>Pet</Text>
           </TouchableOpacity>

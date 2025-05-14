@@ -1,11 +1,25 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import pets from "@/data/pets";
+import { fetchOnePet } from "@/api/api";
 
 const PetDetails = () => {
   const { petId } = useLocalSearchParams();
-  const pet = pets[0];
+  const [pet, setPet] = useState({
+    name: "",
+    image: "",
+    type: "",
+    description: "",
+  });
+
+  // create a button to call the api request to get pet details (done)
+  // function to call getOnePet(petId)
+  const getOnePet = async () => {
+    const fetchOnePetData = await fetchOnePet(Number(petId));
+    setPet(fetchOnePetData);
+  };
+  // state -> no data -> call the api -> reset the state for the new data
   return (
     <View style={styles.container}>
       <Text style={styles.name}>{pet.name}</Text>
@@ -16,6 +30,11 @@ const PetDetails = () => {
       <View>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+      <View>
+        <TouchableOpacity onPress={getOnePet} style={styles.button}>
+          <Text style={styles.buttonText}>Fetch Pet Details</Text>
         </TouchableOpacity>
       </View>
     </View>

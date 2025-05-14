@@ -5,14 +5,24 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import pets from "@/data/pets";
 import PetItem from "./PetItem";
+import { fetchAllPets } from "@/api/api";
 
 const PetList = () => {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("");
   const [displayPets, setDisplayPets] = useState(pets);
+
+  // this is to handle displaying pets from the backend
+  // the function is coming from api.ts
+  const handleGetPets = async () => {
+    const FetchedPetsData = await fetchAllPets();
+    return setDisplayPets(FetchedPetsData);
+  };
+  // the whole issue was to call the function :)
+  handleGetPets();
 
   const petList = displayPets
     .filter((pet) => pet.name.toLowerCase().includes(search.toLowerCase()))
@@ -25,6 +35,7 @@ const PetList = () => {
         displayPets={displayPets}
       />
     ));
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
