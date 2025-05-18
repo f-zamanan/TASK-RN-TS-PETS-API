@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import pets from "@/data/pets";
 import PetItem from "./PetItem";
 import { fetchAllPets } from "@/api/api";
+import { useQuery } from "@tanstack/react-query";
 
 const PetList = () => {
   const [search, setSearch] = useState("");
@@ -17,22 +19,35 @@ const PetList = () => {
 
   // this is to handle displaying pets from the backend
   // the function is coming from api.ts
-  const handleGetPets = async () => {
-    const FetchedPetsData = await fetchAllPets();
-    return setDisplayPets(FetchedPetsData);
-  };
+  // const handleGetPets = async () => {
+  //   const FetchedPetsData = await fetchAllPets();
+  //   return setDisplayPets(FetchedPetsData);
+  // };
   // the whole issue was to call the function :)
-  handleGetPets();
+  // handleGetPets();
 
-  const petList = displayPets
-    .filter((pet) => pet.name.toLowerCase().includes(search.toLowerCase()))
-    .filter((pet) => pet.type.toLowerCase().includes(type.toLowerCase()))
-    .map((pet) => (
+  // fetching all the pets using useQuery
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["getallpets"],
+    queryFn: () => fetchAllPets(),
+  });
+  // if (isLoading) {
+  //   <ActivityIndicator size={"large"} />;
+  // }
+  const petList = data
+    ?.filter((d: { name: string }) =>
+      d.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .filter((d: { type: string }) =>
+      d.type.toLowerCase().includes(type.toLowerCase())
+    )
+    .map((d: any) => (
       <PetItem
-        key={pet.id}
-        pet={pet}
-        setDisplayPets={setDisplayPets}
-        displayPets={displayPets}
+        key={d.id}
+        pet={d}
+        setDisplayPets={setDisplayPets} // the set function here doesn't do anything but I kept it to not break the code, otherwise I would've done too many changes
+        displayPets={data}
       />
     ));
 

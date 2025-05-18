@@ -27,6 +27,9 @@ interface PetItemProps {
 const PetItem = ({ pet, setDisplayPets, displayPets }: PetItemProps) => {
   const [image, setImage] = useState(pet.image);
 
+  // const PetItem = ({ pet, setDisplayPets, displayPets }: PetItemProps) => {
+  //   const [image, setImage] = useState(pet.image);
+
   return (
     <Link href={`/${pet.id}`} asChild>
       <Pressable style={styles.container}>
